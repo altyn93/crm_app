@@ -1,0 +1,47 @@
+{% extends 'crm/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Заявки" %}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2><i class="bi bi-list-task"></i> {% trans "Заявки" %}</h2>
+    <a href="{% url 'export_orders' %}" class="btn btn-outline-success">
+        <i class="bi bi-file-earmark-excel"></i> Excel
+    </a>
+</div>
+
+<div class="mb-3">
+    <a href="{% url 'order_list' %}" class="btn btn-outline-secondary {% if not status %}active{% endif %}">{% trans "Все" %}</a>
+    <a href="{% url 'order_list' %}?status=new" class="btn btn-outline-primary {% if status == 'new' %}active{% endif %}">{% trans "Новые" %}</a>
+    <a href="{% url 'order_list' %}?status=in_progress" class="btn btn-outline-warning {% if status == 'in_progress' %}active{% endif %}">{% trans "В работе" %}</a>
+    <a href="{% url 'order_list' %}?status=done" class="btn btn-outline-success {% if status == 'done' %}active{% endif %}">{% trans "Завершённые" %}</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>{% trans "Клиент" %}</th>
+            <th>{% trans "Услуга" %}</th>
+            <th>{% trans "Статус" %}</th>
+            <th>{% trans "Цена" %}</th>
+            <th>{% trans "Дата" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td><a href="{% url 'client_detail' order.client.pk %}">{{ order.client.name }}</a></td>
+            <td><a href="{% url 'order_detail' order.pk %}">{{ order.service }}</a></td>
+            <td><span class="badge status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+            <td>{{ order.price|default:"—" }}</td>
+            <td>{{ order.created_at|date:"d.m.Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center text-muted">{% trans "Заявок нет" %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

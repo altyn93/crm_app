@@ -1,0 +1,244 @@
+# English translations for CRM
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+
+msgid "Главная"
+msgstr "Dashboard"
+
+msgid "Клиенты"
+msgstr "Clients"
+
+msgid "Заявки"
+msgstr "Orders"
+
+msgid "Выход"
+msgstr "Logout"
+
+msgid "Добавить"
+msgstr "Add"
+
+msgid "Сохранить"
+msgstr "Save"
+
+msgid "Отмена"
+msgstr "Cancel"
+
+msgid "Редактировать"
+msgstr "Edit"
+
+msgid "Поиск"
+msgstr "Search"
+
+msgid "Имя"
+msgstr "Name"
+
+msgid "Телефон"
+msgstr "Phone"
+
+msgid "Заметки"
+msgstr "Notes"
+
+msgid "Услуга"
+msgstr "Service"
+
+msgid "Статус"
+msgstr "Status"
+
+msgid "Цена"
+msgstr "Price"
+
+msgid "Дата"
+msgstr "Date"
+
+msgid "Новая"
+msgstr "New"
+
+msgid "В работе"
+msgstr "In Progress"
+
+msgid "Завершена"
+msgstr "Completed"
+
+msgid "Комментарии"
+msgstr "Comments"
+
+msgid "Добавить комментарий"
+msgstr "Add Comment"
+
+msgid "Вход в систему"
+msgstr "Login"
+
+msgid "Войти"
+msgstr "Sign In"
+
+msgid "Регистрация"
+msgstr "Registration"
+
+msgid "Зарегистрироваться"
+msgstr "Sign Up"
+
+msgid "Название бизнеса"
+msgstr "Business Name"
+
+msgid "Нет аккаунта?"
+msgstr "Don't have an account?"
+
+msgid "Уже есть аккаунт?"
+msgstr "Already have an account?"
+
+msgid "Добро пожаловать"
+msgstr "Welcome"
+
+msgid "Новые заявки"
+msgstr "New Orders"
+
+msgid "Посмотреть"
+msgstr "View"
+
+msgid "Добавить клиента"
+msgstr "Add Client"
+
+msgid "Новая заявка"
+msgstr "New Order"
+
+msgid "Дата добавления"
+msgstr "Date Added"
+
+msgid "Действия"
+msgstr "Actions"
+
+msgid "Клиентов пока нет"
+msgstr "No clients yet"
+
+msgid "Заявок пока нет"
+msgstr "No orders yet"
+
+msgid "Комментариев пока нет"
+msgstr "No comments yet"
+
+msgid "Все"
+msgstr "All"
+
+msgid "Новые"
+msgstr "New"
+
+msgid "Завершённые"
+msgstr "Completed"
+
+msgid "Назад"
+msgstr "Back"
+
+msgid "К клиенту"
+msgstr "To Client"
+
+msgid "Все заявки"
+msgstr "All Orders"
+
+msgid "Excel"
+msgstr "Excel"
+
+msgid "Поиск по имени или телефону"
+msgstr "Search by name or phone"
+
+msgid "Сотрудники"
+msgstr "Employees"
+
+msgid "Аналитика"
+msgstr "Analytics"
+
+msgid "Вход"
+msgstr "Login"
+
+msgid "Профиль"
+msgstr "Profile"
+
+msgid "Язык"
+msgstr "Language"
+
+msgid "Выбор языка"
+msgstr "Select Language"
+
+msgid "Английский"
+msgstr "English"
+
+msgid "Туркменский"
+msgstr "Turkmen"
+msgid "Начать работу"
+msgstr "Start Work"
+
+msgid "Конец работы"
+msgstr "End Work"
+
+msgid "Отчёт времени работы"
+msgstr "Work Time Report"
+
+msgid "Отчёт времени"
+msgstr "Time Report"
+
+msgid "Выбрать дату"
+msgstr "Select Date"
+
+msgid "Фильтр"
+msgstr "Filter"
+
+msgid "Сбросить"
+msgstr "Reset"
+
+msgid "Время начала"
+msgstr "Start Time"
+
+msgid "Время конца"
+msgstr "End Time"
+
+msgid "Продолжительность"
+msgstr "Duration"
+
+msgid "В работе"
+msgstr "In Progress"
+
+msgid "Активна"
+msgstr "Active"
+
+msgid "Завершена"
+msgstr "Completed"
+
+msgid "Итого по сотрудникам"
+msgstr "Total by Employees"
+
+msgid "Нет записей о рабочем времени на выбранную дату"
+msgstr "No work time records for the selected date"
+
+msgid "История рабочего времени"
+msgstr "Work Time History"
+
+msgid "К общему отчёту"
+msgstr "To General Report"
+
+msgid "Выбрать месяц"
+msgstr "Select Month"
+
+msgid "Общее время работы в месяце"
+msgstr "Total Work Time in Month"
+
+msgid "часов"
+msgstr "hours"
+
+msgid "минут"
+msgstr "minutes"
+
+msgid "Это я (связать с моим аккаунтом)"
+msgstr "This is me (link to my account)"
+
+msgid "Установите эту галочку, если вы сами являетесь сотрудником"
+msgstr "Check this box if you are an employee yourself"
+
+msgid "Фамилия"
+msgstr "Last Name"
+
+msgid "Дата"
+msgstr "Date"
+
+msgid "Нет записей о рабочем времени на выбранный месяц"
+msgstr "No work time records for the selected month"

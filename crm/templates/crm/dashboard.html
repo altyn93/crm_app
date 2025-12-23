@@ -1,0 +1,45 @@
+{% extends 'crm/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Главная" %}{% endblock %}
+
+{% block content %}
+<h2>{% trans "Добро пожаловать" %}, {{ profile.business_name }}!</h2>
+<hr>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-people"></i> {% trans "Клиенты" %}</h5>
+                <h2>{{ clients_count }}</h2>
+                <a href="{% url 'client_list' %}" class="btn btn-light btn-sm">{% trans "Посмотреть" %}</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-plus-circle"></i> {% trans "Новые заявки" %}</h5>
+                <h2>{{ orders_new }}</h2>
+                <a href="{% url 'order_list' %}?status=new" class="btn btn-light btn-sm">{% trans "Посмотреть" %}</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-hourglass-split"></i> {% trans "В работе" %}</h5>
+                <h2>{{ orders_in_progress }}</h2>
+                <a href="{% url 'order_list' %}?status=in_progress" class="btn btn-light btn-sm">{% trans "Посмотреть" %}</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'client_add' %}" class="btn btn-success btn-lg">
+        <i class="bi bi-person-plus"></i> {% trans "Добавить клиента" %}
+    </a>
+</div>
+{% endblock %}

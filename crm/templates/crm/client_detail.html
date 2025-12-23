@@ -1,0 +1,57 @@
+{% extends 'crm/base.html' %}
+{% load i18n %}
+
+{% block title %}{{ client.name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2><i class="bi bi-person"></i> {{ client.name }}</h2>
+    <div>
+        <a href="{% url 'client_edit' client.pk %}" class="btn btn-outline-primary">
+            <i class="bi bi-pencil"></i> {% trans "Редактировать" %}
+        </a>
+        <a href="{% url 'client_delete' client.pk %}" class="btn btn-outline-danger">
+            <i class="bi bi-trash"></i> {% trans "Удалить" %}
+        </a>
+        <a href="{% url 'order_add' client.pk %}" class="btn btn-success">
+            <i class="bi bi-plus"></i> {% trans "Новая заявка" %}
+        </a>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p><strong>{% trans "Телефон" %}:</strong> {{ client.phone }}</p>
+        <p><strong>{% trans "Заметки" %}:</strong> {{ client.notes|default:"—" }}</p>
+        <p><strong>{% trans "Дата добавления" %}:</strong> {{ client.created_at|date:"d.m.Y H:i" }}</p>
+    </div>
+</div>
+
+<h4>{% trans "Заявки" %} ({{ orders.count }})</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>{% trans "Услуга" %}</th>
+            <th>{% trans "Статус" %}</th>
+            <th>{% trans "Цена" %}</th>
+            <th>{% trans "Дата" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td><a href="{% url 'order_detail' order.pk %}">{{ order.service }}</a></td>
+            <td><span class="badge status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+            <td>{{ order.price|default:"—" }}</td>
+            <td>{{ order.created_at|date:"d.m.Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-muted">{% trans "Заявок пока нет" %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'client_list' %}" class="btn btn-secondary">← {% trans "Назад" %}</a>
+{% endblock %}

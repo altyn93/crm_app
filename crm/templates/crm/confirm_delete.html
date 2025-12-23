@@ -1,0 +1,32 @@
+{% extends 'crm/base.html' %}
+{% load i18n %}
+
+{% block title %}Удалить{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5><i class="bi bi-exclamation-triangle"></i> Подтверждение удаления</h5>
+            </div>
+            <div class="card-body">
+                <p>Вы уверены, что хотите удалить {{ type }}: <strong>{{ object }}</strong>?</p>
+                <p class="text-muted">Это действие нельзя отменить.</p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Да, удалить</button>
+                    <a href="javascript:history.back()" class="btn btn-secondary">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+

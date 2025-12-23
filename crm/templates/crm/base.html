@@ -1,0 +1,79 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CRM{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: #2c3e50;
+        }
+        .sidebar a {
+            color: #ecf0f1;
+            padding: 12px 20px;
+            display: block;
+            text-decoration: none;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: #34495e;
+            color: #fff;
+        }
+        .content {
+            padding: 20px;
+        }
+        .status-new { background: #3498db; color: white; }
+        .status-in_progress { background: #f39c12; color: white; }
+        .status-done { background: #27ae60; color: white; }
+        .lang-switch { font-size: 12px; padding: 5px 10px; }
+    </style>
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 sidebar p-0">
+                <div class="p-3 text-white">
+                    <h5><i class="bi bi-building"></i> {{ user.businessprofile.business_name }}</h5>
+                    <div class="mt-2">
+                        <a href="{% url 'change_language' 'en' %}" class="btn btn-sm {% if LANGUAGE_CODE == 'en' %}btn-light{% else %}btn-outline-light{% endif %} lang-switch">EN</a>
+                        <a href="{% url 'change_language' 'ru' %}" class="btn btn-sm {% if LANGUAGE_CODE == 'ru' %}btn-light{% else %}btn-outline-light{% endif %} lang-switch">RU</a>
+                        <a href="{% url 'change_language' 'tk' %}" class="btn btn-sm {% if LANGUAGE_CODE == 'tk' %}btn-light{% else %}btn-outline-light{% endif %} lang-switch">TM</a>
+                    </div>
+                </div>
+                <a href="{% url 'dashboard' %}"><i class="bi bi-house"></i> {% trans "Главная" %}</a>
+                <a href="{% url 'client_list' %}"><i class="bi bi-people"></i> {% trans "Клиенты" %}</a>
+                <a href="{% url 'order_list' %}"><i class="bi bi-list-task"></i> {% trans "Заявки" %}</a>
+                <a href="{% url 'analytics' %}"><i class="bi bi-graph-up"></i> {% trans "Аналитика" %}</a>
+                <a href="{% url 'employee_list' %}"><i class="bi bi-people-fill"></i> {% trans "Сотрудники" %}</a>
+                <a href="{% url 'chat_list' %}"><i class="bi bi-chat-dots"></i> {% trans "Чат" %}</a>
+                <hr class="text-white">
+                <div class="px-3 pb-3 d-grid gap-2">
+                    <a href="{% url 'start_work' %}" class="btn btn-success btn-sm"><i class="bi bi-play-circle"></i> {% trans "Начать работу" %}</a>
+                    <a href="{% url 'end_work' %}" class="btn btn-danger btn-sm"><i class="bi bi-stop-circle"></i> {% trans "Конец работы" %}</a>
+                </div>
+                <hr class="text-white">
+                <a href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i> {% trans "Выход" %}</a>
+            </div>
+            <div class="col-md-10 content">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="container">
+        {% block auth_content %}{% endblock %}
+    </div>
+    {% endif %}
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

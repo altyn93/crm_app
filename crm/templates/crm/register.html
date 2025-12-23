@@ -1,0 +1,44 @@
+{% extends 'crm/base.html' %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block auth_content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header text-center">
+                <h4><i class="bi bi-person-plus"></i> Регистрация</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ field.label }}</label>
+                            <input type="{% if 'password' in field.name %}password{% else %}text{% endif %}" 
+                                   name="{{ field.name }}" 
+                                   class="form-control {% if field.errors %}is-invalid{% endif %}"
+                                   value="{{ field.value|default:'' }}">
+                            {% if field.help_text %}
+                                <small class="text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-success w-100">Зарегистрироваться</button>
+                </form>
+                <hr>
+                <p class="text-center mb-0">Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+

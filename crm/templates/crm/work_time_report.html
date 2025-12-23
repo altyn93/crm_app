@@ -1,0 +1,110 @@
+{% extends 'crm/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Отчёт времени работы" %}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="mb-4">
+        <h1>📊 {% trans "Отчёт времени работы" %}</h1>
+    </div>
+
+    <!-- Фильтр по дате -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="dateFilter" class="form-label">{% trans "Выбрать дату" %}</label>
+                    <input type="date" class="form-control" id="dateFilter" name="date" value="{{ filter_date|date:'Y-m-d' }}">
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">{% trans "Фильтр" %}</button>
+                    <a href="{% url 'work_time_report' %}" class="btn btn-secondary ms-2">{% trans "Сбросить" %}</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Таблица работников и их времени -->
+    {% if work_logs %}
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>{% trans "Сотрудник" %}</th>
+                    <th>{% trans "Время начала" %}</th>
+                    <th>{% trans "Время конца" %}</th>
+                    <th>{% trans "Продолжительность" %}</th>
+                    <th>{% trans "Статус" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in work_logs %}
+                <tr>
+                    <td>
+                        <a href="{% url 'employee_work_time' log.employee.pk %}">
+                            <strong>{{ log.employee.first_name }} {{ log.employee.last_name }}</strong>
+                        </a>
+                    </td>
+                    <td>{{ log.start_time|date:"H:i" }}</td>
+                    <td>
+                        {% if log.end_time %}
+                            {{ log.end_time|date:"H:i" }}
+                        {% else %}
+                            <span class="badge bg-warning">{% trans "В работе" %}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% widthratio log.duration.total_seconds 3600 1 %}h
+                        {% widthratio log.duration.total_seconds 60 1 %}m
+                    </td>
+                    <td>
+                        {% if log.is_active %}
+                            <span class="badge bg-success">{% trans "Активна" %}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{% trans "Завершена" %}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Итоги по сотрудникам -->
+    <div class="card mt-4">
+        <div class="card-header bg-dark text-white">
+            <h5>{% trans "Итого по сотрудникам" %}</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for employee in employees %}
+                    {% if employee.id in employee_work_time %}
+                    <div class="col-md-6 mb-3">
+                        <div class="alert alert-info">
+                            <strong>{{ employee.first_name }} {{ employee.last_name }}</strong>
+                            <br>
+                            {% widthratio employee_work_time|get_item:employee.id.total_seconds 3600 1 %}h
+                            {% widthratio employee_work_time|get_item:employee.id.total_seconds 60 1 %}m
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="alert alert-info mt-4">
+        {% trans "Нет записей о рабочем времени на выбранную дату" %}
+    </div>
+    {% endif %}
+
+</div>
+
+<style>
+    .table-hover tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+</style>
+{% endblock %}

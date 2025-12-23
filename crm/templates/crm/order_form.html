@@ -1,0 +1,36 @@
+{% extends 'crm/base.html' %}
+{% load i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+<p class="text-muted">{% trans "Клиент" %}: {{ client.name }}</p>
+<hr>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">{% trans "Услуга" %}</label>
+                <input type="text" name="service" class="form-control" value="{{ form.service.value|default:'' }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">{% trans "Статус" %}</label>
+                <select name="status" class="form-select">
+                    <option value="new" {% if form.status.value == 'new' %}selected{% endif %}>{% trans "Новая" %}</option>
+                    <option value="in_progress" {% if form.status.value == 'in_progress' %}selected{% endif %}>{% trans "В работе" %}</option>
+                    <option value="done" {% if form.status.value == 'done' %}selected{% endif %}>{% trans "Завершена" %}</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">{% trans "Цена" %}</label>
+                <input type="number" step="0.01" name="price" class="form-control" value="{{ form.price.value|default:'' }}">
+            </div>
+            <button type="submit" class="btn btn-primary">{% trans "Сохранить" %}</button>
+            <a href="{% url 'client_detail' client.pk %}" class="btn btn-secondary">{% trans "Отмена" %}</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

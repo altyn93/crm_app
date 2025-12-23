@@ -1,0 +1,34 @@
+{% extends 'crm/base.html' %}
+
+{% block title %}Чат{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+    <div class="row" style="height: 80vh;">
+        <!-- Список контактов -->
+        <div class="col-md-3 border-end" style="overflow-y: auto;">
+            <h5>💬 Контакты</h5>
+            <div class="list-group">
+                {% for conversation in conversations %}
+                <a href="{% url 'chat_detail' conversation.pk %}" class="list-group-item list-group-item-action">
+                    <strong>{{ conversation.first_name }} {{ conversation.last_name }}</strong>
+                    <br>
+                    <small class="text-muted">{{ conversation.get_role_display }}</small>
+                </a>
+                {% empty %}
+                <div class="alert alert-info">
+                    Нет контактов. Добавьте сотрудников для чата.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Чат -->
+        <div class="col-md-9 d-flex flex-column" style="height: 100%; background: #f8f9fa;">
+            <div class="flex-grow-1" style="overflow-y: auto; padding: 20px;">
+                <h4 class="text-center text-muted">Выберите контакт для начала чата</h4>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

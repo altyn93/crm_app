@@ -1,0 +1,215 @@
+# Turkmen translations for CRM
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: tk\n"
+
+msgid "Главная"
+msgstr "Baş sahypa"
+
+msgid "Клиенты"
+msgstr "Müşderiler"
+
+msgid "Заявки"
+msgstr "Sargytlar"
+
+msgid "Выход"
+msgstr "Çykmak"
+
+msgid "Добавить"
+msgstr "Goşmak"
+
+msgid "Сохранить"
+msgstr "Ýatda sakla"
+
+msgid "Отмена"
+msgstr "Ýatyr"
+
+msgid "Редактировать"
+msgstr "Üýtgetmek"
+
+msgid "Поиск"
+msgstr "Gözleg"
+
+msgid "Имя"
+msgstr "Ady"
+
+msgid "Телефон"
+msgstr "Telefon"
+
+msgid "Заметки"
+msgstr "Bellikler"
+
+msgid "Услуга"
+msgstr "Hyzmat"
+
+msgid "Статус"
+msgstr "Ýagdaýy"
+
+msgid "Цена"
+msgstr "Bahasy"
+
+msgid "Дата"
+msgstr "Senesi"
+
+msgid "Новая"
+msgstr "Täze"
+
+msgid "В работе"
+msgstr "Işde"
+
+msgid "Завершена"
+msgstr "Tamamlandy"
+
+msgid "Комментарии"
+msgstr "Teswirler"
+
+msgid "Добавить комментарий"
+msgstr "Teswir goşmak"
+
+msgid "Вход в систему"
+msgstr "Ulgama girmek"
+
+msgid "Войти"
+msgstr "Girmek"
+
+msgid "Регистрация"
+msgstr "Hasaba almak"
+
+msgid "Зарегистрироваться"
+msgstr "Hasaba durmak"
+
+msgid "Название бизнеса"
+msgstr "Kärhananyň ady"
+
+msgid "Нет аккаунта?"
+msgstr "Hasabyňyz ýokmy?"
+
+msgid "Уже есть аккаунт?"
+msgstr "Hasabyňyz barmy?"
+
+msgid "Добро пожаловать"
+msgstr "Hoş geldiňiz"
+
+msgid "Новые заявки"
+msgstr "Täze sargytlar"
+
+msgid "Посмотреть"
+msgstr "Görmek"
+
+msgid "Добавить клиента"
+msgstr "Müşderi goşmak"
+
+msgid "Новая заявка"
+msgstr "Täze sargyt"
+
+msgid "Дата добавления"
+msgstr "Goşulan senesi"
+
+msgid "Действия"
+msgstr "Hereketler"
+
+msgid "Клиентов пока нет"
+msgstr "Müşderi ýok"
+
+msgid "Заявок пока нет"
+msgstr "Sargyt ýok"
+
+msgid "Комментариев пока нет"
+msgstr "Teswir ýok"
+
+msgid "Все"
+msgstr "Hemmesi"
+
+msgid "Новые"
+msgstr "Täzeler"
+
+msgid "Завершённые"
+msgstr "Tamamlananlar"
+
+msgid "Назад"
+msgstr "Yza"
+
+msgid "К клиенту"
+msgstr "Müşderä"
+
+msgid "Все заявки"
+msgstr "Ähli sargytlar"
+
+msgid "Excel"
+msgstr "Excel"
+
+msgid "Поиск по имени или телефону"
+msgstr "Ady ýa telefon boýunça gözleg"
+
+msgid "Начать работу"
+msgstr "Işe başla"
+
+msgid "Конец работы"
+msgstr "Işi gutarty"
+
+msgid "Отчёт времени работы"
+msgstr "Iş wagtynyn hasabaty"
+
+msgid "Отчёт времени"
+msgstr "Wagt hasabaty"
+
+msgid "Выбрать дату"
+msgstr "Tärihi saýla"
+
+msgid "Фильтр"
+msgstr "Filtr"
+
+msgid "Сбросить"
+msgstr "Beýan et"
+
+msgid "Время начала"
+msgstr "Başlama wagt"
+
+msgid "Время конца"
+msgstr "Gutarma wagt"
+
+msgid "Продолжительность"
+msgstr "Dowam etmek"
+
+msgid "В работе"
+msgstr "Işde"
+
+msgid "Активна"
+msgstr "Aktiwdir"
+
+msgid "Завершена"
+msgstr "Gutardy"
+
+msgid "Итого по сотрудникам"
+msgstr "Işçiler boýunça jemi"
+
+msgid "Нет записей о рабочем времени на выбранную дату"
+msgstr "Saýlanan günde iş wagtynyn ýazgysy ýok"
+
+msgid "История рабочего времени"
+msgstr "Iş wagtynyn taryhy"
+
+msgid "К общему отчёту"
+msgstr "Umumy hasabata"
+
+msgid "Выбрать месяц"
+msgstr "Aýy saýla"
+
+msgid "Общее время работы в месяце"
+msgstr "Aýyň içinde iş wagtynyn jemi"
+
+msgid "часов"
+msgstr "sagat"
+
+msgid "минут"
+msgstr "minut"
+
+msgid "Дата"
+msgstr "Tärihi"
+
+msgid "Нет записей о рабочем времени на выбранный месяц"
+msgstr "Saýlanan aýda iş wagtynyn ýazgysy ýok"
+
+
+

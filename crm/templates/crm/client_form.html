@@ -1,0 +1,31 @@
+{% extends 'crm/base.html' %}
+{% load i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+<hr>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">{% trans "Имя" %}</label>
+                <input type="text" name="name" class="form-control" value="{{ form.name.value|default:'' }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">{% trans "Телефон" %}</label>
+                <input type="text" name="phone" class="form-control" value="{{ form.phone.value|default:'' }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">{% trans "Заметки" %}</label>
+                <textarea name="notes" class="form-control" rows="3">{{ form.notes.value|default:'' }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">{% trans "Сохранить" %}</button>
+            <a href="{% url 'client_list' %}" class="btn btn-secondary">{% trans "Отмена" %}</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

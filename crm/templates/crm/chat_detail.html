@@ -1,0 +1,78 @@
+{% extends 'crm/base.html' %}
+
+{% block title %}Чат с {{ other_employee.first_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+    <div class="row" style="height: 80vh;">
+        <!-- Список контактов -->
+        <div class="col-md-3 border-end" style="overflow-y: auto;">
+            <h5>💬 Контакты</h5>
+            <div class="list-group">
+                {% for employee in request.user.businessprofile.employees.all %}
+                {% if employee.user != request.user %}
+                <a href="{% url 'chat_detail' employee.pk %}" 
+                   class="list-group-item list-group-item-action {% if employee.pk == other_employee.pk %}active{% endif %}">
+                    <strong>{{ employee.first_name }} {{ employee.last_name }}</strong>
+                    <br>
+                    <small class="text-muted">{{ employee.get_role_display }}</small>
+                </a>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Чат -->
+        <div class="col-md-9 d-flex flex-column" style="height: 100%; background: #f8f9fa;">
+            <!-- Заголовок -->
+            <div class="bg-white border-bottom p-3">
+                <h5 class="mb-0">{{ other_employee.first_name }} {{ other_employee.last_name }}</h5>
+                <small class="text-muted">{{ other_employee.get_role_display }}</small>
+            </div>
+
+            <!-- Сообщения -->
+            <div class="flex-grow-1" style="overflow-y: auto; padding: 20px;">
+                {% for message in messages %}
+                    {% if message.sender.pk == current_employee.pk %}
+                        <!-- Мое сообщение -->
+                        <div class="d-flex justify-content-end mb-3">
+                            <div class="bg-primary text-white p-3 rounded" style="max-width: 60%; word-wrap: break-word;">
+                                <p class="mb-1">{{ message.text }}</p>
+                                <small class="text-muted">{{ message.created_at|time:"H:i" }}</small>
+                            </div>
+                        </div>
+                    {% else %}
+                        <!-- Сообщение от другого -->
+                        <div class="d-flex justify-content-start mb-3">
+                            <div class="bg-light p-3 rounded" style="max-width: 60%; word-wrap: break-word;">
+                                <p class="mb-1">{{ message.text }}</p>
+                                <small class="text-muted">{{ message.created_at|time:"H:i" }}</small>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% empty %}
+                    <div class="text-center text-muted mt-5">
+                        <p>Начните разговор</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Форма отправки -->
+            <div class="bg-white border-top p-3">
+                <form method="post" class="d-flex gap-2">
+                    {% csrf_token %}
+                    <input type="text" name="text" class="form-control" placeholder="Введите сообщение..." required>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .list-group-item.active {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+</style>
+{% endblock %}

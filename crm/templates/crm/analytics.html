@@ -1,0 +1,172 @@
+{% extends 'crm/base.html' %}
+{% load static %}
+
+{% block title %}Аналитика{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>📊 Аналитика и Статистика</h1>
+    
+    <!-- Основные метрики -->
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Всего клиентов</h5>
+                    <p class="card-text display-6">{{ total_clients }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Завершено заявок</h5>
+                    <p class="card-text display-6">{{ orders_done }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">В работе</h5>
+                    <p class="card-text display-6">{{ orders_in_progress }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Всего доход</h5>
+                    <p class="card-text display-6">{{ total_revenue|floatformat:2 }} TMT</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Дополнительные метрики -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Общая статистика</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Новых заявок:</span>
+                            <strong>{{ orders_new }}</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Среднее время выполнения:</span>
+                            <strong>{{ avg_execution_time }} дней</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Всего заявок:</span>
+                            <strong>{{ total_orders }}</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Сотрудники</h5>
+                    <p>Добавлено сотрудников: <strong>{{ employees_count }}</strong> / {{ max_employees }}</p>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar" role="progressbar" style="width: {{ employees_percent }}%;" aria-valuenow="{{ employees_percent }}" aria-valuemin="0" aria-valuemax="100">{{ employees_percent }}%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Графики -->
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Доход по месяцам</h5>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Распределение по статусам</h5>
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // График доходов
+    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+            labels: {{ months_labels|safe }},
+            datasets: [{
+                label: 'Доход (TMT)',
+                data: {{ revenue_by_month|safe }},
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // График статусов
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    const statusData = {{ status_distribution|safe }};
+    new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(statusData),
+            datasets: [{
+                data: Object.values(statusData),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                }
+            }
+        }
+    });
+</script>
+
+<style>
+    .card {
+        border: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .card-body {
+        padding: 1.5rem;
+    }
+</style>
+{% endblock %}
