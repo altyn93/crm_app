@@ -1,0 +1,71 @@
+{% extends 'crm/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Пригласить сотрудника" %}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>{% trans "Пригласить сотрудника" %}</h2>
+            <p class="text-muted">{% trans "Отправьте приглашение сотруднику. Он получит ссылку для регистрации." %}</p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="email" class="form-label">{% trans "Email" %} *</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                    <small class="text-muted">{% trans "На этот email будет отправлено приглашение" %}</small>
+                </div>
+
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">{% trans "Имя" %} *</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="last_name" class="form-label">{% trans "Фамилия" %} *</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="role" class="form-label">{% trans "Должность" %} *</label>
+                    <select class="form-select" id="role" name="role" required>
+                        <option value="">{% trans "Выберите должность" %}</option>
+                        {% for value, label in roles %}
+                            <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> {% trans "Отправить приглашение" %}
+                    </button>
+                    <a href="{% url 'employee_list' %}" class="btn btn-secondary">{% trans "Отмена" %}</a>
+                </div>
+            </form>
+
+            <div class="alert alert-info mt-4">
+                <h5>{% trans "Как это работает?" %}</h5>
+                <ol>
+                    <li>{% trans "Введите email и данные сотрудника" %}</li>
+                    <li>{% trans "Нажмите 'Отправить приглашение'" %}</li>
+                    <li>{% trans "Сотруднику будет отправлена ссылка для регистрации" %}</li>
+                    <li>{% trans "После регистрации он сразу получит доступ к системе" %}</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

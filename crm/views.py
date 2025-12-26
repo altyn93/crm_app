@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm
+from django.contrib.auth.models import User
 from django.db.models import Q, Sum, Count, Avg
 from django.http import HttpResponse, JsonResponse
 from django.utils import translation
@@ -9,7 +10,7 @@ from django.utils.timezone import now
 from datetime import timedelta, datetime
 from openpyxl import Workbook
 import json
-from .models import BusinessProfile, Client, Order, Comment, Employee, Message, WorkLog
+from .models import BusinessProfile, Client, Order, Comment, Employee, Message, WorkLog, EmployeeInvitation
 from .forms import RegisterForm, ClientForm, OrderForm, CommentForm
 
 
@@ -55,6 +56,71 @@ def logout_view(request):
     """Выход из системы"""
     logout(request)
     return redirect('login')
+
+
+def password_reset_view(request):
+    """Страница для начала восстановления пароля"""
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = User.objects.get(email=email)
+            from django.contrib.auth.tokens import default_token_generator
+            from django.contrib import messages
+            
+            token = default_token_generator.make_token(user)
+            uid = user.pk
+            
+            # В реальном проекте здесь отправляли бы email
+            # Для демонстрации показываем ссылку в браузере
+            reset_url = request.build_absolute_uri(f'/password-reset-confirm/{uid}/{token}/')
+            messages.success(request, f'Ссылка для восстановления: <a href="{reset_url}" class="alert-link">Восстановить пароль</a>')
+            
+            return render(request, 'crm/password_reset_done.html')
+        except User.DoesNotExist:
+            from django.contrib import messages
+            messages.warning(request, 'Email не найден в системе')
+    
+    return render(request, 'crm/password_reset.html')
+
+
+def password_reset_confirm_view(request, uid, token):
+    """Страница для подтверждения восстановления и установки нового пароля"""
+    from django.contrib.auth.tokens import default_token_generator
+    
+    try:
+        user = User.objects.get(pk=uid)
+    except User.DoesNotExist:
+        from django.contrib import messages
+        messages.error(request, 'Неверная ссылка восстановления')
+        return redirect('login')
+    
+    if not default_token_generator.check_token(user, token):
+        from django.contrib import messages
+        messages.error(request, 'Ссылка восстановления истекла. Запросите новую.')
+        return redirect('password_reset')
+    
+    if request.method == 'POST':
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        
+        if password1 != password2:
+            from django.contrib import messages
+            messages.error(request, 'Пароли не совпадают')
+            return render(request, 'crm/password_reset_confirm.html', {'uid': uid, 'token': token})
+        
+        if len(password1) < 8:
+            from django.contrib import messages
+            messages.error(request, 'Пароль должен быть не менее 8 символов')
+            return render(request, 'crm/password_reset_confirm.html', {'uid': uid, 'token': token})
+        
+        user.set_password(password1)
+        user.save()
+        
+        from django.contrib import messages
+        messages.success(request, 'Пароль успешно изменён! Теперь вы можете войти с новым паролем.')
+        return redirect('login')
+    
+    return render(request, 'crm/password_reset_confirm.html', {'uid': uid, 'token': token})
 
 
 @login_required
@@ -432,10 +498,159 @@ def employee_delete(request, pk):
     employee = get_object_or_404(Employee, pk=pk, business=profile)
     
     if request.method == 'POST':
+        # Сохраняем связанного User (если есть), затем удаляем запись сотрудника
+        linked_user = employee.user
         employee.delete()
+        if linked_user:
+            try:
+                linked_user.delete()
+            except Exception:
+                pass
+
+        from django.contrib import messages
+        messages.success(request, 'Сотрудник и связанная учётная запись удалены')
         return redirect('employee_list')
     
     return render(request, 'crm/confirm_delete.html', {'object': employee, 'type': 'сотрудника'})
+
+
+# ==================== ПРИГЛАШЕНИЯ СОТРУДНИКОВ ====================
+
+@login_required
+def employee_invite(request):
+    """Создать и отправить приглашение сотруднику"""
+    profile = request.user.businessprofile
+    
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        role = request.POST.get('role')
+        
+        # Проверяем, не существует ли уже такой пользователь
+        if User.objects.filter(email=email).exists():
+            from django.contrib import messages
+            messages.warning(request, f'Пользователь с email {email} уже зарегистрирован. Попросите его присоединиться к компании.')
+            return redirect('employee_list')
+        
+        # Проверяем, не есть ли уже приглашение для этого email
+        if EmployeeInvitation.objects.filter(business=profile, email=email, status='pending').exists():
+            from django.contrib import messages
+            messages.warning(request, f'Приглашение уже отправлено на {email}')
+            return redirect('employee_list')
+        
+        # Создаём приглашение
+        invitation = EmployeeInvitation.objects.create(
+            business=profile,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            role=role,
+            invited_by=request.user
+        )
+        
+        # Отправляем email (в реальном проекте)
+        from django.core.mail import send_mail
+        from django.urls import reverse
+        invite_link = request.build_absolute_uri(reverse('register_by_invitation', args=[invitation.token]))
+        
+        try:
+            send_mail(
+                f'Приглашение присоединиться к {profile.business_name}',
+                f'''Привет {first_name}!
+
+Вы приглашены присоединиться к команде "{profile.business_name}".
+
+Нажмите на ссылку ниже, чтобы зарегистрироваться:
+{invite_link}
+
+После регистрации вы сразу сможете работать с системой.
+
+Спасибо!''',
+                'noreply@crmsystem.com',
+                [email],
+                fail_silently=True,
+            )
+        except:
+            pass  # Email может не отправиться локально
+        
+        from django.contrib import messages
+        messages.success(request, f'✓ Приглашение создано! Ссылка: {invite_link}')
+        return redirect('employee_list')
+    
+    return render(request, 'crm/employee_invite.html', {'roles': Employee._meta.get_field('role').choices})
+
+
+@login_required
+def employee_invitations(request):
+    """Список отправленных приглашений"""
+    profile = request.user.businessprofile
+    invitations = EmployeeInvitation.objects.filter(business=profile).order_by('-created_at')
+    
+    return render(request, 'crm/employee_invitations.html', {'invitations': invitations})
+
+
+def register_by_invitation(request, token):
+    """Регистрация по приглашению"""
+    try:
+        invitation = EmployeeInvitation.objects.get(token=token, status='pending')
+    except EmployeeInvitation.DoesNotExist:
+        from django.contrib import messages
+        messages.error(request, 'Приглашение не найдено или уже использовано')
+        return redirect('login')
+    
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = invitation.email
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        
+        # Проверяем пароли
+        if password1 != password2:
+            from django.contrib import messages
+            messages.error(request, 'Пароли не совпадают')
+            return render(request, 'crm/register_by_invitation.html', {'invitation': invitation})
+        
+        # Проверяем уникальность username
+        if User.objects.filter(username=username).exists():
+            from django.contrib import messages
+            messages.error(request, 'Это имя пользователя уже занято')
+            return render(request, 'crm/register_by_invitation.html', {'invitation': invitation})
+        
+        # Создаём пользователя
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password1,
+            first_name=invitation.first_name,
+            last_name=invitation.last_name
+        )
+        
+        # Создаём сотрудника с привязкой к пользователю
+        Employee.objects.create(
+            business=invitation.business,
+            user=user,
+            first_name=invitation.first_name,
+            last_name=invitation.last_name,
+            email=email,
+            role=invitation.role,
+            is_active=True
+        )
+        
+        # Отмечаем приглашение как принятое
+        from django.utils import timezone
+        invitation.status = 'accepted'
+        invitation.accepted_at = timezone.now()
+        invitation.save()
+        
+        # Автоматически логиним пользователя
+        login(request, user)
+        
+        from django.contrib import messages
+        messages.success(request, f'✓ Добро пожаловать в {invitation.business.business_name}!')
+        return redirect('dashboard')
+    
+    return render(request, 'crm/register_by_invitation.html', {'invitation': invitation})
 
 
 # ==================== ЧАТ ====================

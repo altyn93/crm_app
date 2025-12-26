@@ -8,6 +8,8 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>👥 {% trans "Сотрудники" %}</h1>
         <div>
+            <a href="{% url 'employee_invitations' %}" class="btn btn-info">📧 {% trans "Приглашения" %}</a>
+            <a href="{% url 'employee_invite' %}" class="btn btn-success">✉️ {% trans "Пригласить" %}</a>
             <a href="{% url 'work_time_report' %}" class="btn btn-info">📊 {% trans "Отчёт времени" %}</a>
             <a href="{% url 'employee_add' %}" class="btn btn-primary">+ {% trans "Добавить сотрудника" %}</a>
         </div>

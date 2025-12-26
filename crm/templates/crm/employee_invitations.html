@@ -1,0 +1,110 @@
+{% extends 'crm/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "История приглашений" %}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>{% trans "История приглашений" %}</h2>
+                <a href="{% url 'employee_invite' %}" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> {% trans "Новое приглашение" %}
+                </a>
+            </div>
+
+            {% if invitations %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>{% trans "Email" %}</th>
+                                <th>{% trans "Имя" %}</th>
+                                <th>{% trans "Должность" %}</th>
+                                <th>{% trans "Статус" %}</th>
+                                <th>{% trans "Отправлено" %}</th>
+                                <th>{% trans "Действия" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for inv in invitations %}
+                                <tr>
+                                    <td>{{ inv.email }}</td>
+                                    <td>{{ inv.first_name }} {{ inv.last_name }}</td>
+                                    <td>
+                                        {% if inv.role == 'manager' %}
+                                            {% trans "Менеджер" %}
+                                        {% elif inv.role == 'specialist' %}
+                                            {% trans "Специалист" %}
+                                        {% elif inv.role == 'admin' %}
+                                            {% trans "Администратор" %}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if inv.status == 'pending' %}
+                                            <span class="badge bg-warning">{% trans "В ожидании" %}</span>
+                                        {% elif inv.status == 'accepted' %}
+                                            <span class="badge bg-success">{% trans "Принято" %}</span>
+                                        {% elif inv.status == 'rejected' %}
+                                            <span class="badge bg-danger">{% trans "Отклонено" %}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>{{ inv.created_at|date:"d.m.Y H:i" }}</small>
+                                    </td>
+                                    <td>
+                                        {% if inv.status == 'pending' %}
+                                            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#copyModal{{ inv.id }}">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    {% trans "Приглашений ещё не было" %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Модалы для копирования ссылок -->
+{% for inv in invitations %}
+    {% if inv.status == 'pending' %}
+        <div class="modal fade" id="copyModal{{ inv.id }}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{% trans "Ссылка приглашения" %}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>{% trans "Скопируйте эту ссылку и отправьте сотруднику:" %}</p>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="link{{ inv.id }}" value="{{ request.build_absolute_uri '/register/invite/' }}{{ inv.token }}/" readonly>
+                            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('link{{ inv.id }}')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
+
+<script>
+function copyToClipboard(elementId) {
+    var copyText = document.getElementById(elementId);
+    copyText.select();
+    document.execCommand("copy");
+    alert("{% trans 'Ссылка скопирована!' %}");
+}
+</script>
+{% endblock %}

@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
+import secrets
 
 
 class BusinessProfile(models.Model):
@@ -149,3 +151,34 @@ class WorkLog(models.Model):
     
     class Meta:
         ordering = ['-start_time']
+
+
+class EmployeeInvitation(models.Model):
+    """Приглашение для регистрации сотрудника"""
+    STATUS_CHOICES = [
+        ('pending', 'В ожидании'),
+        ('accepted', 'Принято'),
+        ('rejected', 'Отклонено'),
+    ]
+    
+    business = models.ForeignKey(BusinessProfile, on_delete=models.CASCADE, related_name='employee_invitations')
+    email = models.EmailField('Email')
+    first_name = models.CharField('Имя', max_length=100)
+    last_name = models.CharField('Фамилия', max_length=100)
+    role = models.CharField('Должность', max_length=20, choices=Employee.ROLE_CHOICES, default='specialist')
+    
+    # Уникальный токен для приглашения
+    token = models.CharField('Токен приглашения', max_length=100, unique=True, default=secrets.token_urlsafe)
+    status = models.CharField('Статус', max_length=20, choices=STATUS_CHOICES, default='pending')
+    
+    # Дополнительная информация
+    invited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField('Дата приглашения', auto_now_add=True)
+    accepted_at = models.DateTimeField('Дата принятия', null=True, blank=True)
+    
+    def __str__(self):
+        return f"Приглашение для {self.email} ({self.business.business_name})"
+    
+    class Meta:
+        ordering = ['-created_at']
+        unique_together = ['business', 'email']

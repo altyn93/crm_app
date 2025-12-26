@@ -8,6 +8,10 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('blocked/', views.blocked_view, name='blocked'),
     
+    # Восстановление пароля
+    path('password-reset/', views.password_reset_view, name='password_reset'),
+    path('password-reset-confirm/<int:uid>/<str:token>/', views.password_reset_confirm_view, name='password_reset_confirm'),
+    
     # Клиенты
     path('clients/', views.client_list, name='client_list'),
     path('clients/add/', views.client_add, name='client_add'),
@@ -34,6 +38,11 @@ urlpatterns = [
     path('employees/add/', views.employee_add, name='employee_add'),
     path('employees/<int:pk>/edit/', views.employee_edit, name='employee_edit'),
     path('employees/<int:pk>/delete/', views.employee_delete, name='employee_delete'),
+    
+    # Приглашения сотрудников
+    path('employees/invite/', views.employee_invite, name='employee_invite'),
+    path('employees/invitations/', views.employee_invitations, name='employee_invitations'),
+    path('register/invite/<str:token>/', views.register_by_invitation, name='register_by_invitation'),
     
     # Чат
     path('chat/', views.chat_list, name='chat_list'),

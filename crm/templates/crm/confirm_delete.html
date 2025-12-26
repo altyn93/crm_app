@@ -13,6 +13,11 @@
             <div class="card-body">
                 <p>Вы уверены, что хотите удалить {{ type }}: <strong>{{ object }}</strong>?</p>
                 <p class="text-muted">Это действие нельзя отменить.</p>
+                {% if type == 'сотрудника' %}
+                <div class="alert alert-warning mt-2">
+                    <strong>Внимание:</strong> при удалении сотрудника будет также удалена связанная учётная запись пользователя, если она существует.
+                </div>
+                {% endif %}
                 
                 <form method="post">
                     {% csrf_token %}
