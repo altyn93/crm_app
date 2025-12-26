@@ -1,0 +1,34 @@
+{
+  "services": [
+    {
+      "name": "web",
+      "buildCommand": "pip install --upgrade pip && pip install -r requirements.txt",
+      "startCommand": "gunicorn crm_project.wsgi",
+      "releaseCommand": "python manage.py migrate --noinput && python manage.py collectstatic --noinput"
+    }
+  ],
+  "plugins": [
+    {
+      "name": "postgres"
+    }
+  ],
+  "environment": [
+    {
+      "name": "SECRET_KEY",
+      "value": "<GENERATE_AND_SET_IN_RAILWAY>"
+    },
+    {
+      "name": "DEBUG",
+      "value": "False"
+    },
+    {
+      "name": "ALLOWED_HOSTS",
+      "value": "<your-app>.up.railway.app"
+    },
+    {
+      "name": "DATABASE_URL",
+      "value": "${POSTGRES_URL}"
+    }
+  ],
+  "notes": "Fill SECRET_KEY and ALLOWED_HOSTS in Railway UI after import. Railway will provision Postgres plugin and set DATABASE_URL."
+}
